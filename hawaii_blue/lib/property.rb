@@ -5,7 +5,7 @@ module Property
   end
 
   def quote(dates)
-    sprintf("%s: $%.2f", name, total(dates))
+    "%s: $%.2f" % [name, total(dates)]
   end
 
   def total(dates)
