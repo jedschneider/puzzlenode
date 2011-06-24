@@ -14,7 +14,7 @@ module SeasonalProperty
     start = values['start']
     finish = values['end']
     range = PartialDateRange.new(start, finish)
-    range.include?(date)
+    range.includes?(date)
   end
 
   def season_for_date(date)
