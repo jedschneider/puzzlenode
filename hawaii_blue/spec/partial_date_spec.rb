@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe PartialDate do
+
+  describe "methods" do
+    subject { PartialDate.new("04-06") }
+    it { should respond_to(:<=>, :>, :<, :>=, :<=, :month, :day) }
+  end
+
   it "should accept a partial date and set its vars" do
     expect{@pd = PartialDate.new("05-04")}.to_not raise_error
     @pd.date.should == "05-04"
@@ -8,58 +14,49 @@ describe PartialDate do
     @pd.date.should == "05-04"
   end
 
-   context "when comparing two partial dates" do
-     it "should respond to the comparison operator" do
-       expect { PartialDate.new("05-04").send(:<=>, PartialDate.new("05-05") )}.to_not raise_error
-     end
+  context "with different date formats" do
+    describe %Q|PartialDate.new("05-04")|  do
+      subject {PartialDate.new("05-04")}
+      its(:month) {should == 5 }
+      its(:day) {should == 4 }
+    end
 
-     it "should know its month" do
-       PartialDate.new("05-04").month.should == 5
-       PartialDate.new("2011/05/04").month.should == 5
-     end
+    describe %Q|PartialDate.new("2011/06/24")| do
+      subject { PartialDate.new("2011/06/24") }
+      its(:month) { should == 6 }
+      its(:day) { should == 24 }
+    end
+  end
 
-     it "should know its day" do
-       PartialDate.new("05-04").day.should == 4
-       PartialDate.new("2011/05/04").day.should == 4
-     end
+  describe "comarpition operator" do 
+    let(:target) { PartialDate.new("05-04") }
+    let(:day_before) { PartialDate.new("05-03") }
+    let(:day_after) { PartialDate.new("05-05") }
+    let(:month_after) { PartialDate.new("06-04") }
 
-     it "should return 1 when it has a date later than the compared date" do
-       (PartialDate.new("05-04") <=> PartialDate.new("04-04")).should == 1
-       (PartialDate.new("05-04") <=> PartialDate.new("05-03")).should == 1
-     end
+    specify {(target <=> day_before).should be 1 }
+    specify {(month_after <=> target).should be 1 }
+    specify {(target <=> month_after).should be -1 }
+    specify {(target <=> day_after).should be -1 }
+    specify {(target <=> target).should be 0 }
+  end
 
-     it "should return -1 when it has a date earlier than the compared date" do
-       (PartialDate.new("05-04") <=> PartialDate.new("06-04")).should == -1
-       (PartialDate.new("05-04") <=> PartialDate.new("05-05")).should == -1
-     end
+  describe ("compared to " + PartialDate.new("06-04").to_s) do
 
-     it "should retun 0 if the partial dates are equal" do
-       (PartialDate.new("05-04") <=> PartialDate.new("05-04")).should == 0
-     end
+   subject { PartialDate.new("06-04") }
 
-     it "should know that it is greater than another partial date" do
-       (PartialDate.new("06-04") > PartialDate.new("05-04")).should be true
-       (PartialDate.new("05-05") > PartialDate.new("05-04")).should be true
-       (PartialDate.new("04-05") > PartialDate.new("05-04")).should be false
-       (PartialDate.new("05-05") > PartialDate.new("05-05")).should be false
-     end
-
-     it "should know that it is less than another partial date" do
-       (PartialDate.new("05-04") < PartialDate.new("06-04")).should be true
-       (PartialDate.new("05-05") < PartialDate.new("05-06")).should be true
-     end
-
-     it "should know if it is greater than or equal to another date" do
-       (PartialDate.new("05-04") >= PartialDate.new("05-04")).should == true
-       (PartialDate.new("05-04") >= PartialDate.new("05-03")).should == true
-       (PartialDate.new("05-04") >= PartialDate.new("05-05")).should == false
-     end
-
-     it "should know if it is less than or equal to anther date" do
-       (PartialDate.new("05-14") <= PartialDate.new("05-14")).should == true
-       (PartialDate.new("05-04") <= PartialDate.new("05-04")).should == true
-       (PartialDate.new("05-04") <= PartialDate.new("05-05")).should == true
-       (PartialDate.new("05-04") <= PartialDate.new("05-03")).should == false
-     end
+   it { should be > PartialDate.new("05-04") }
+   it { should be > PartialDate.new("06-03") }
+   it { should_not be > PartialDate.new("07-01") }
+   it { should_not be > PartialDate.new("06-05") }
+   it { should be < PartialDate.new("06-05") }
+   it { should be < PartialDate.new("07-31") }
+   it { should_not be < PartialDate.new("06-04") }
+   it { should be >= PartialDate.new("06-04") }
+   it { should be >= PartialDate.new("06-03") }
+   it { should_not be >= PartialDate.new("06-05") }
+   it { should be <= PartialDate.new("06-04") }
+   it { should be <= PartialDate.new("06-05") }
+   it { should be <= PartialDate.new("06-04") }
   end
 end

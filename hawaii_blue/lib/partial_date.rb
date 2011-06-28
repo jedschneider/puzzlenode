@@ -39,4 +39,8 @@ class PartialDate
   def day
     date[/\d{2}$/, 0].to_i
   end
+
+  def to_s
+    "PartialDate " + @date
+  end
 end
