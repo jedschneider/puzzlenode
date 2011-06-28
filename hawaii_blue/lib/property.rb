@@ -27,7 +27,7 @@ module Property
     nights.map{|night| nightly_rate(night)}.reduce(:+)
   end
 
-  def nightly_rate(date)
+  def nightly_rate(date="")
     raise NotImplementedError
   end
 end

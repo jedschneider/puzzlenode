@@ -1,16 +1,19 @@
 require 'spec_helper'
 
-describe "BasicProperty" do
-  let(:property) {(Object.new().extend BasicProperty) }
-
-  describe "nightly rate" do
-    subject {property}
-    it { should respond_to(:nightly_rate).with(1).argument }
-    it { should respond_to(:nightly_rate).with(0).arguments }
-
-    it "should define the nightly rate for a given property" do
-      property = {"name"=>"Paradise Inn", "rate"=>"$250", "cleaning fee"=>"$120"}.extend BasicProperty
-      property.nightly_rate(Date.new).should == 250.0
+describe BasicProperty do
+  subject {({"name"=>"Paradise Inn", "rate"=>"$250", "cleaning fee"=>"$120"}.extend BasicProperty)}
+  it_behaves_like "a property"
+  
+  context "the implemented methods"
+    its(:nightly_rate) {should == 250.0}
+    
+    it "should format the quote accordingly" do
+      subject.quote("2011/05/05 - 2011/05/10").should == "Paradise Inn: $1426.36"
     end
-  end
+
+    it "should report the total cost for a requested reservation period" do
+      sales_tax = 1.0411416
+      subject.total("2011/05/05 - 2011/05/10").should == (((5*250) + 120) * sales_tax)
+    end
 end
+

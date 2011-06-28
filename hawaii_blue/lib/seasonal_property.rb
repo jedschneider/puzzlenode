@@ -4,7 +4,7 @@ require 'property'
 module SeasonalProperty
   include Property
 
-  def nightly_rate(date)
+  def nightly_rate(date=nil)
     values, _ = season_for_date(date).values
     values['rate'][/\d+/,0].to_f
   end
