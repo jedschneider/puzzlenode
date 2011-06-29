@@ -7,9 +7,9 @@ The basic premise is that there is a list of properties in json format (examples
 
 ## Running the code
 
-You need the json-pure gem for parsing the JSON
+You need the json_pure gem for parsing the JSON
 
-    gem install json-pure
+    gem install json_pure
 
 In order to run the specs you need RSpec 2.x
 

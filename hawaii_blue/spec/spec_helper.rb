@@ -1,6 +1,7 @@
+$: << '../lib'
 require 'rspec'
-require 'lib/seasonal_property'
-require 'lib/basic_property'
+require 'seasonal_property'
+require 'basic_property'
 
 shared_examples_for "a property" do
   subject { Hash.new().extend described_class}
